@@ -8,12 +8,17 @@
     tools:context=".MainActivity">
 
     <TextView
-        android:layout_width="wrap_content"
+        android:id="@+id/mineCountTextView"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:text="@string/mines_10"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:gravity="start"
+        android:padding="16dp"
+        app:layout_constraintBaseline_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintWidth_percent="0.5"
+        />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

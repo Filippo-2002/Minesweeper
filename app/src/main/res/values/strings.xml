@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Minesweeper</string>
+    <string name="app_name">CS310 Filippo de Cristofaro</string>
     <string name="mines_10">Mines: 10</string>
     <string name="time_0">Time: 0</string>
     <string name="toggle_mode">Toggle Mode</string>
@@ -10,8 +10,13 @@
     <string name="play_again">Play Again</string>
     <string name="You_won">You Won!</string>
     <string name="You_lost">You Lost!</string>
+    <string name="time_taken">Time Elapsed: %1$d s</string>
     <string name="time_taken_text">Time: %1$d s</string>
     <string name="timer_text">Time: %1$d s</string>
+    <string name="time_text">Time: %ds</string>
     <string name="time_0s">Time: 0s</string>
+    <string name="game_over">Game Over!</string>
     <string name="mine_count_text">Mines: %1$d</string>
+    <string name="mines_4">Mines: 4</string>
+    <string name="filippo_de_cristofaro">CSCI 310 Filippo de Cristofaro</string>
 </resources>

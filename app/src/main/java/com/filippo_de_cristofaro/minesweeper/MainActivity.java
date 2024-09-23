@@ -5,7 +5,6 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.GridLayout;
 import android.widget.ImageButton;
@@ -22,6 +21,7 @@ public class MainActivity extends AppCompatActivity {
     private ImageButton modeToggleButton;
     private GridLayout mineGrid;
 
+    private boolean isWin;
     private final int ROWS = 12;
     private final int COLUMNS = 10;
     private final int TOTAL_MINES = 4;
@@ -34,14 +34,6 @@ public class MainActivity extends AppCompatActivity {
     private boolean isGameOver = false;
 
     private final Handler timerHandler = new Handler();
-    private final Runnable timerRunnable = new Runnable() {
-        @Override
-        public void run() {
-            elapsedSeconds++;
-            timerTextView.setText(getString(R.string.timer_text, elapsedSeconds));
-            timerHandler.postDelayed(this, 1000);
-        }
-    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,24 +54,30 @@ public class MainActivity extends AppCompatActivity {
     private void initializeGame() {
 
         isGameOver = false;
+        isFlagMode = false;
         flagsPlaced = 0;
         elapsedSeconds = 0;
-        mineCountTextView.setText(getString(R.string.mine_count_text, (TOTAL_MINES - flagsPlaced)));
-        timerTextView.setText(R.string.time_0s);
+        mineCountTextView.setText(getString(R.string.mine_count_text, TOTAL_MINES - flagsPlaced));
+        timerTextView.setText(getString(R.string.time_text, elapsedSeconds));
+        modeToggleButton.setImageResource(R.drawable.digging_icon);
 
         //start the timer
-        timerHandler.postDelayed(timerRunnable, 1000);
+        startTimer();
+
         //initialize the game
-        mineGrid.removeAllViews();
         for (int row = 0; row < ROWS; row++) {
             for (int col = 0; col < COLUMNS; col++) {
                 cells[row][col] = new Cell();
 
                 Button button = new Button(this);
-                button.setLayoutParams(new ViewGroup.LayoutParams(
-                        ViewGroup.LayoutParams.WRAP_CONTENT,
-                        ViewGroup.LayoutParams.WRAP_CONTENT
-                ));
+                GridLayout.LayoutParams params = new GridLayout.LayoutParams(
+                        GridLayout.spec(row, 1f),
+                        GridLayout.spec(col, 1f)
+                );
+                params.width = 0;
+                params.height = 0;
+                params.setMargins(1, 1, 1, 1); // Optional: set margins between buttons
+                button.setLayoutParams(params);
                 button.setBackgroundColor(Color.LTGRAY);
                 button.setTag(new int[]{row, col});
                 button.setOnClickListener(cellClickListener);
@@ -88,12 +86,27 @@ public class MainActivity extends AppCompatActivity {
                 mineGrid.addView(button);
             }
         }
-        //to be defined
+
         placeMines();
-        //to be defined
         calculateAdjacentMines();
     }
 
+        //timer
+    private void startTimer() {
+        timerHandler.removeCallbacksAndMessages(null); // Clear any existing callbacks
+        Runnable timerRunnable = new Runnable() {
+            @Override
+            public void run() {
+                elapsedSeconds++;
+                timerTextView.setText(getString(R.string.time_text, elapsedSeconds));
+                timerHandler.postDelayed(this, 1000);
+            }
+        };
+        timerHandler.postDelayed(timerRunnable, 1000);
+    }
+
+
+    //place mines
     private void placeMines() {
         Random random = new Random();
         int minesPlaced = 0;
@@ -107,6 +120,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    //mines logic
     private void calculateAdjacentMines() {
         int[] dx = {-1, -1, -1, 0, 0, 1, 1, 1};
         int[] dy = {-1, 0, 1, -1, 1, -1, 0, 1};
@@ -114,11 +128,10 @@ public class MainActivity extends AppCompatActivity {
         for (int row = 0; row < ROWS; row++) {
             for (int col = 0; col < COLUMNS; col++) {
                 if (cells[row][col].hasMine()) {
-                    cells[row][col].setAdjacentMines(-1); // -1 indicates a mine
                     continue;
                 }
                 int count = 0;
-                for (int i = 0; i < 8; i++) {
+                for (int i = 0; i < dx.length; i++) {
                     int newRow = row + dx[i];
                     int newCol = col + dy[i];
                     if (isValidCell(newRow, newCol) && cells[newRow][newCol].hasMine()) {
@@ -135,173 +148,176 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void toggleMode() {
+        isFlagMode = !isFlagMode;
         if (isFlagMode) {
-            isFlagMode = false;
-            modeToggleButton.setImageResource(R.drawable.digging_icon);
-            Toast.makeText(this, "Digging Mode", Toast.LENGTH_SHORT).show();
-        } else {
-            isFlagMode = true;
             modeToggleButton.setImageResource(R.drawable.flag_icon);
             Toast.makeText(this, "Flag Mode", Toast.LENGTH_SHORT).show();
+        } else {
+            modeToggleButton.setImageResource(R.drawable.digging_icon);
+            Toast.makeText(this, "Digging Mode", Toast.LENGTH_SHORT).show();
         }
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        timerHandler.removeCallbacks(timerRunnable);
+        timerHandler.removeCallbacksAndMessages(null);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        timerHandler.removeCallbacks(timerRunnable);
+        timerHandler.removeCallbacksAndMessages(null);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         if (!isGameOver) {
-            timerHandler.postDelayed(timerRunnable, 1000);
+            startTimer();
         }
     }
 
-    private final View.OnClickListener cellClickListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            if (isGameOver) {
-                navigateToResult();
-                return;
-            }
+private final View.OnClickListener cellClickListener = view -> {
+    if (isGameOver) {
+        navigateToResult();
+        return;
+    }
 
-            int[] position = (int[]) view.getTag();
-            int row = position[0];
-            int col = position[1];
-            Cell cell = cells[row][col];
-            Button button = buttons[row][col];
+    int[] position = (int[]) view.getTag();
+    int row = position[0];
+    int col = position[1];
+    Cell cell = cells[row][col];
+    Button button = buttons[row][col];
 
-            if (isFlagMode) {
-                //flag mode
-                if (!cell.isRevealed()) {
-                    if (!cell.isFlagged()) {
-                        if (flagsPlaced < TOTAL_MINES) {
-                            cell.setFlagged(true);
-                            button.setText("F");
-                            flagsPlaced++;
-                            mineCountTextView.setText(getString(R.string.mine_count_text, (TOTAL_MINES - flagsPlaced)));
-                        } else {
-                            Toast.makeText(MainActivity.this, "No more flags available", Toast.LENGTH_SHORT).show();
-                        }
-                    } else {
-                        cell.setFlagged(false);
-                        button.setText("");
-                        flagsPlaced--;
-                        mineCountTextView.setText(getString(R.string.mine_count_text, (TOTAL_MINES - flagsPlaced)));
-                    }
-                }
+    if (isFlagMode) {
+        handleFlagAction(cell, button);
+    } else {
+        handleDigAction(row, col);
+    }
+};
+
+private void handleFlagAction(Cell cell, Button button) {
+    if (!cell.isRevealed()) {
+        if (!cell.isFlagged()) {
+            if (flagsPlaced < TOTAL_MINES) {
+                cell.setFlagged(true);
+                button.setText("F");
+                flagsPlaced++;
+                mineCountTextView.setText(getString(R.string.mine_count_text, TOTAL_MINES - flagsPlaced));
             } else {
-                //digging mode
-                if (!cell.isRevealed() && !cell.isFlagged()) {
-                    revealCell(row, col);
-                    checkWinCondition();
-                }
+                Toast.makeText(MainActivity.this, "No more flags available", Toast.LENGTH_SHORT).show();
             }
+        } else {
+            cell.setFlagged(false);
+            button.setText("");
+            flagsPlaced--;
+            mineCountTextView.setText(getString(R.string.mine_count_text, TOTAL_MINES - flagsPlaced));
         }
-    };
+    }
+}
 
-    private void revealCell(int row, int col) {
-        if (!isValidCell(row, col)) return;
-
-        Cell cell = cells[row][col];
-        Button button = buttons[row][col];
-
-        if (cell.isRevealed() || cell.isFlagged()) return;
-
-        cell.setRevealed(true);
-        button.setEnabled(false);
-        button.setBackgroundColor(Color.WHITE);
-
+private void handleDigAction(int row, int col) {
+    Cell cell = cells[row][col];
+    if (!cell.isRevealed() && !cell.isFlagged()) {
         if (cell.hasMine()) {
-            button.setText("M");
-            button.setTextColor(Color.RED);
+            revealCell(row, col);
             gameOver(false);
         } else {
-            int adjacent = cell.getAdjacentMines();
-            if (adjacent > 0) {
-                button.setText(String.valueOf(adjacent));
-                switch (adjacent) {
-                    case 1:
-                        button.setTextColor(Color.BLUE);
-                        break;
-                    case 2:
-                        button.setTextColor(Color.GREEN);
-                        break;
-                    case 3:
-                        button.setTextColor(Color.RED);
-                        break;
-                    default:
-                        button.setTextColor(Color.BLACK);
-                        break;
-                }
-            } else {
-                //if no mines
-                button.setText("");
-                int[] dx = {-1, -1, -1, 0, 0, 1, 1, 1};
-                int[] dy = {-1, 0, 1, -1, 1, -1, 0, 1};
-                for (int i = 0; i < 8; i++) {
-                    int newRow = row + dx[i];
-                    int newCol = col + dy[i];
-                    if (isValidCell(newRow, newCol)) {
-                        revealCell(newRow, newCol);
+            revealCell(row, col);
+            if (checkWinCondition()) {
+                gameOver(true);
+            }
+        }
+    }
+}
+
+private void revealCell(int row, int col) {
+    if (!isValidCell(row, col)) return;
+
+    Cell cell = cells[row][col];
+    Button button = buttons[row][col];
+
+    if (cell.isRevealed() || cell.isFlagged()) return;
+
+    cell.setRevealed(true);
+    button.setEnabled(false);
+    button.setBackgroundColor(Color.WHITE);
+
+    if (cell.hasMine()) {
+        button.setText("M");
+        button.setTextColor(Color.RED);
+    } else {
+        int adjacent = cell.getAdjacentMines();
+        if (adjacent > 0) {
+            button.setText(String.valueOf(adjacent));
+            switch (adjacent) {
+                case 1:
+                    button.setTextColor(Color.BLUE);
+                    break;
+                case 2:
+                    button.setTextColor(Color.GREEN);
+                    break;
+                case 3:
+                    button.setTextColor(Color.RED);
+                    break;
+                default:
+                    button.setTextColor(Color.BLACK);
+                    break;
+            }
+        } else {
+            button.setText("");
+            for (int i = -1; i <= 1; i++) {
+                for (int j = -1; j <= 1; j++) {
+                    if (i != 0 || j != 0) {
+                        revealCell(row + i, col + j);
                     }
                 }
             }
         }
     }
+}
 
-    private void gameOver(boolean isWin) {
-        isGameOver = true;
-        timerHandler.removeCallbacks(timerRunnable);
+private void gameOver(boolean isWin) {
+    isGameOver = true;
+    this.isWin = isWin; //store result
+    timerHandler.removeCallbacksAndMessages(null);
 
-        //revral mines
-        for (int row = 0; row < ROWS; row++) {
-            for (int col = 0; col < COLUMNS; col++) {
-                if (cells[row][col].hasMine()) {
-                    buttons[row][col].setText("M");
-                    buttons[row][col].setTextColor(Color.RED);
-                }
+    //reveal all mines
+    revealAllMines();
+}
+
+private void revealAllMines() {
+    for (int row = 0; row < ROWS; row++) {
+        for (int col = 0; col < COLUMNS; col++) {
+            Cell cell = cells[row][col];
+            Button button = buttons[row][col];
+            if (cell.hasMine()) {
+                button.setText("M");
+                button.setTextColor(Color.RED);
+                button.setEnabled(false);
             }
         }
-        navigateToResult(isWin);
     }
+}
 
-    private void checkWinCondition() {
-        boolean allNonMineCellsRevealed = true;
-        for (int row = 0; row < ROWS; row++) {
-            for (int col = 0; col < COLUMNS; col++) {
-                Cell cell = cells[row][col];
-                if (!cell.hasMine() && !cell.isRevealed()) {
-                    allNonMineCellsRevealed = false;
-                    break;
-                }
+private boolean checkWinCondition() {
+    for (int row = 0; row < ROWS; row++) {
+        for (int col = 0; col < COLUMNS; col++) {
+            Cell cell = cells[row][col];
+            if (!cell.hasMine() && !cell.isRevealed()) {
+                return false;
             }
         }
-
-        if (allNonMineCellsRevealed) {
-            gameOver(true);
-        }
     }
-    //Result class to be defined
-    private void navigateToResult(boolean isWin) {
-        Intent intent = new Intent(MainActivity.this, ResultActivity.class);
-        intent.putExtra("RESULT", isWin ? "won" : "lost");
-        intent.putExtra("TIME", elapsedSeconds);
-        startActivity(intent);
-    }
+    return true;
+}
 
-    private void navigateToResult() {
-        Intent intent = new Intent(MainActivity.this, ResultActivity.class);
-        startActivity(intent);
-    }
-
+private void navigateToResult() {
+    Intent intent = new Intent(MainActivity.this, ResultActivity.class);
+    intent.putExtra("RESULT", isWin ? "won" : "lost");
+    intent.putExtra("TIME", elapsedSeconds);
+    startActivity(intent);
+    finish();
+}
 }

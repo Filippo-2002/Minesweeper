@@ -8,27 +8,29 @@
 
     <TextView
         android:id="@+id/resultTextView"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/you_won"
         android:textSize="24sp"
         android:textStyle="bold"
-        android:gravity="center"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/timeTakenTextView"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintVertical_chainStyle="packed"
+        android:layout_marginBottom="16dp" />
 
     <TextView
         android:id="@+id/timeTakenTextView"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/time_120s"
+        android:text="@string/time_taken"
         android:textSize="18sp"
-        android:gravity="center"
         app:layout_constraintTop_toBottomOf="@id/resultTextView"
+        app:layout_constraintBottom_toTopOf="@id/restartButton"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="16dp" />
+        android:layout_marginBottom="32dp" />
 
     <Button
         android:id="@+id/restartButton"
@@ -36,9 +38,8 @@
         android:layout_height="wrap_content"
         android:text="@string/play_again"
         app:layout_constraintTop_toBottomOf="@id/timeTakenTextView"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="32dp" />
-
+        app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

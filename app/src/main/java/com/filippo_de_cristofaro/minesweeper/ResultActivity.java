@@ -14,26 +14,31 @@ public class ResultActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_result);
 
+
         TextView resultTextView = findViewById(R.id.resultTextView);
         TextView timeTakenTextView = findViewById(R.id.timeTakenTextView);
         Button restartButton = findViewById(R.id.restartButton);
 
-
+        //get data
         Intent intent = getIntent();
         String result = intent.getStringExtra("RESULT");
         int time = intent.getIntExtra("TIME", 0);
 
-
+        //set data
         if (result != null) {
             if (result.equals("won")) {
-                resultTextView.setText(R.string.You_won);
+                resultTextView.setText(getString(R.string.You_won));
             } else {
-                resultTextView.setText(R.string.You_lost);
+                resultTextView.setText(getString(R.string.You_lost));
             }
+        } else {
+            resultTextView.setText(getString(R.string.game_over));
         }
+
 
         timeTakenTextView.setText(getString(R.string.time_taken_text, time));
 
+        //restart
         restartButton.setOnClickListener(view -> {
             Intent restartIntent = new Intent(ResultActivity.this, MainActivity.class);
             restartIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);

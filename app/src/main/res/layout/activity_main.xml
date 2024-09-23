@@ -18,6 +18,22 @@
         android:padding="16dp"
         app:layout_constraintBaseline_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/timerTextView"
+        app:layout_constraintWidth_percent="0.5"
+        />
+
+    <TextView
+        android:id="@+id/timerTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/time_0"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:gravity="end"
+        android:padding="16dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toEndOf="@id/mineCountTextView"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintWidth_percent="0.5"
         />
 

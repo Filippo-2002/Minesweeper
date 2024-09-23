@@ -143,11 +143,11 @@ public class MainActivity extends AppCompatActivity {
         if (isFlagMode) {
             isFlagMode = false;
             modeToggleButton.setImageResource(R.drawable.digging_icon);
-            Toast.makeText(this, "Now in Digging Mode", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Digging Mode", Toast.LENGTH_SHORT).show();
         } else {
             isFlagMode = true;
             modeToggleButton.setImageResource(R.drawable.flag_icon);
-            Toast.makeText(this, "Now in Flag", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Flag Mode", Toast.LENGTH_SHORT).show();
         }
     }
 

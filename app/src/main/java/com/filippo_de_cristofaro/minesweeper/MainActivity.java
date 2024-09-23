@@ -25,20 +25,20 @@ public class MainActivity extends AppCompatActivity {
     private final int ROWS = 12;
     private final int COLUMNS = 10;
     private final int TOTAL_MINES = 4;
-    private Cell[][] cells = new Cell[ROWS][COLUMNS];
-    private Button[][] buttons = new Button[ROWS][COLUMNS];
+    private final Cell[][] cells = new Cell[ROWS][COLUMNS];
+    private final Button[][] buttons = new Button[ROWS][COLUMNS];
 
     private boolean isFlagMode = false;
     private int flagsPlaced = 0;
     private int elapsedSeconds = 0;
     private boolean isGameOver = false;
 
-    private Handler timerHandler = new Handler();
-    private Runnable timerRunnable = new Runnable() {
+    private final Handler timerHandler = new Handler();
+    private final Runnable timerRunnable = new Runnable() {
         @Override
         public void run() {
             elapsedSeconds++;
-            timerTextView.setText("Time: " + elapsedSeconds + "s");
+            timerTextView.setText(getString(R.string.timer_text, elapsedSeconds));
             timerHandler.postDelayed(this, 1000);
         }
     };
@@ -56,12 +56,7 @@ public class MainActivity extends AppCompatActivity {
         //game-start
         initializeGame();
 
-        modeToggleButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                toggleMode();
-            }
-        });
+        modeToggleButton.setOnClickListener(view -> toggleMode());
     }
 
     private void initializeGame() {
@@ -69,8 +64,8 @@ public class MainActivity extends AppCompatActivity {
         isGameOver = false;
         flagsPlaced = 0;
         elapsedSeconds = 0;
-        mineCountTextView.setText("Mines: " + (TOTAL_MINES - flagsPlaced));
-        timerTextView.setText("Time: 0s");
+        mineCountTextView.setText(getString(R.string.mine_count_text, (TOTAL_MINES - flagsPlaced)));
+        timerTextView.setText(R.string.time_0s);
 
         //start the timer
         timerHandler.postDelayed(timerRunnable, 1000);
@@ -171,7 +166,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private View.OnClickListener cellClickListener = new View.OnClickListener() {
+    private final View.OnClickListener cellClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
             if (isGameOver) {
@@ -193,7 +188,7 @@ public class MainActivity extends AppCompatActivity {
                             cell.setFlagged(true);
                             button.setText("F");
                             flagsPlaced++;
-                            mineCountTextView.setText("Mines: " + (TOTAL_MINES - flagsPlaced));
+                            mineCountTextView.setText(getString(R.string.mine_count_text, (TOTAL_MINES - flagsPlaced)));
                         } else {
                             Toast.makeText(MainActivity.this, "No more flags available", Toast.LENGTH_SHORT).show();
                         }
@@ -201,7 +196,7 @@ public class MainActivity extends AppCompatActivity {
                         cell.setFlagged(false);
                         button.setText("");
                         flagsPlaced--;
-                        mineCountTextView.setText("Mines: " + (TOTAL_MINES - flagsPlaced));
+                        mineCountTextView.setText(getString(R.string.mine_count_text, (TOTAL_MINES - flagsPlaced)));
                     }
                 }
             } else {

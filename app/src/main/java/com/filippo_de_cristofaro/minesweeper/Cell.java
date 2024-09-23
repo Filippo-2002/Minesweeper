@@ -13,7 +13,7 @@ public class Cell {
         this.adjacentMines = 0;
     }
 
-    // Getters and Setters
+    //getters and setters
     public boolean hasMine() {
         return hasMine;
     }

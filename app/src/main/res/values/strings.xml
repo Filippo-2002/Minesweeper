@@ -10,4 +10,8 @@
     <string name="play_again">Play Again</string>
     <string name="You_won">You Won!</string>
     <string name="You_lost">You Lost!</string>
+    <string name="time_taken_text">Time: %1$d s</string>
+    <string name="timer_text">Time: %1$d s</string>
+    <string name="time_0s">Time: 0s</string>
+    <string name="mine_count_text">Mines: %1$d</string>
 </resources>

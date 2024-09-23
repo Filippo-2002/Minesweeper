@@ -7,34 +7,76 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
+    <ImageView
+        android:id="@+id/flagIcon"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:src="@drawable/flag_icon"
+        android:contentDescription="@string/flag_icon_description"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp" />
+
     <TextView
         android:id="@+id/mineCountTextView"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/mines_10"
         android:textSize="18sp"
         android:textStyle="bold"
-        android:gravity="start"
-        android:padding="16dp"
-        app:layout_constraintBaseline_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/timerTextView"
-        app:layout_constraintWidth_percent="0.5"
-        />
+        android:gravity="center_vertical"
+        android:layout_marginStart="8dp"
+        app:layout_constraintTop_toTopOf="@id/flagIcon"
+        app:layout_constraintStart_toEndOf="@id/flagIcon" />
+
+    <ImageView
+        android:id="@+id/clockIcon"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:src="@drawable/time_icon"
+        android:contentDescription="@string/clock_icon_description"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="16dp" />
 
     <TextView
         android:id="@+id/timerTextView"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/time_0"
         android:textSize="18sp"
         android:textStyle="bold"
-        android:gravity="end"
-        android:padding="16dp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toEndOf="@id/mineCountTextView"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintWidth_percent="0.5"
-        />
+        android:gravity="center_vertical"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintTop_toTopOf="@id/clockIcon"
+        app:layout_constraintEnd_toStartOf="@id/clockIcon" />
+
+    <GridLayout
+        android:id="@+id/mineGrid"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:alignmentMode="alignMargins"
+        android:columnCount="10"
+        android:rowCount="12"
+        android:layout_margin="16dp"
+        app:layout_constraintTop_toBottomOf="@id/mineCountTextView"
+        app:layout_constraintBottom_toTopOf="@id/modeToggleButton"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+    </GridLayout>
+
+    <ImageButton
+        android:id="@+id/modeToggleButton"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:src="@drawable/digging_icon"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="@string/toggle_mode"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

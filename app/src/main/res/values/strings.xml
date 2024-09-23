@@ -2,4 +2,7 @@
     <string name="app_name">Minesweeper</string>
     <string name="mines_10">Mines: 10</string>
     <string name="time_0">Time: 0</string>
+    <string name="toggle_mode">Toggle Mode</string>
+    <string name="flag_icon_description" />
+    <string name="clock_icon_description" />
 </resources>

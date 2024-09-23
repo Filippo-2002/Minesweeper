@@ -190,6 +190,10 @@ private final View.OnClickListener cellClickListener = view -> {
     Cell cell = cells[row][col];
     Button button = buttons[row][col];
 
+    if (cell.isRevealed()) {
+        return;
+    }
+
     if (isFlagMode) {
         handleFlagAction(cell, button);
     } else {
@@ -285,6 +289,13 @@ private void gameOver(boolean isWin) {
 
     //reveal all mines
     revealAllMines();
+    //make it so any cell can be clicked to show results
+    for (int row = 0; row < ROWS; row++) {
+        for (int col = 0; col < COLUMNS; col++) {
+            Button button = buttons[row][col];
+            button.setEnabled(true);
+        }
+    }
 }
 
 private void revealAllMines() {

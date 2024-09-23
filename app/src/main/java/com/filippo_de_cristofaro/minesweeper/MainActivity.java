@@ -76,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
                 );
                 params.width = 0;
                 params.height = 0;
-                params.setMargins(1, 1, 1, 1); // Optional: set margins between buttons
+                params.setMargins(2, 2, 2, 2);
                 button.setLayoutParams(params);
                 button.setBackgroundColor(Color.LTGRAY);
                 button.setTag(new int[]{row, col});
@@ -93,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
 
         //timer
     private void startTimer() {
-        timerHandler.removeCallbacksAndMessages(null); // Clear any existing callbacks
+        timerHandler.removeCallbacksAndMessages(null);
         Runnable timerRunnable = new Runnable() {
             @Override
             public void run() {

@@ -19,4 +19,7 @@
     <string name="mine_count_text">Mines: %1$d</string>
     <string name="mines_4">Mines: 4</string>
     <string name="filippo_de_cristofaro">CSCI 310 Filippo de Cristofaro</string>
+    <string name="_10">10</string>
+    <string name="time_icon_description" />
+    <string name="_0s">0s</string>
 </resources>

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">CS310       Filippo de Cristofaro</string>
+    <string name="app_name">CS310 Filippo de Cristofaro (decristo)</string>
     <string name="mines_10">Mines: 10</string>
     <string name="time_0">Time: 0</string>
     <string name="toggle_mode">Toggle Mode</string>
